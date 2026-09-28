@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone - Assignment</title>
+    <!-- Font Awesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #030303;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER SECTION --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 56px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            z-index: 1000;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-btn {
+            font-size: 18px;
+            color: #606060;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #000;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            color: #ff0000;
+            font-size: 22px;
+        }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 0 1 600px;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 38px;
+            padding: 0 12px;
+            border: 1px solid #ccc;
+            border-right: none;
+            border-radius: 2px 0 0 2px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #1c62b9;
+        }
+
+        .search-btn {
+            width: 64px;
+            height: 38px;
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            color: #606060;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .mic-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #f9f9f9;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #030303;
+            cursor: pointer;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-right i {
+            font-size: 18px;
+            color: #606060;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #673ab7;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* --- LAYOUT CONTAINER --- */
+        .main-container {
+            display: flex;
+            margin-top: 56px;
+        }
+
+        /* --- SIDEBAR SECTION --- */
+        aside {
+            width: 240px;
+            background-color: #ffffff;
+            height: calc(100vh - 56px);
+            position: fixed;
+            top: 56px;
+            left: 0;
+            overflow-y: auto;
+            border-right: 1px solid #e5e5e5;
+            padding-top: 12px;
+        }
+
+        .sidebar-group {
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 10px 24px;
+            color: #030303;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sidebar-item.active {
+            background-color: #e5e5e5;
+            font-weight: bold;
+        }
+
+        .sidebar-item:hover:not(.active) {
+            background-color: #f2f2f2;
+        }
+
+        .sidebar-item i {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+            color: #606060;
+        }
+
+        .sidebar-item.active i {
+            color: #ff0000;
+        }
+
+        .sidebar-heading {
+            padding: 8px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #606060;
+            text-transform: uppercase;
+        }
+
+        /* --- BODY CONTENT SECTION --- */
+        main {
+            margin-left: 240px;
+            flex: 1;
+            padding: 16px 24px;
+        }
+
+        /* Filter Tags Bar */
+        .tags-bar {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 24px;
+            white-space: nowrap;
+        }
+
+        .tag {
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            color: #030303;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .tag.active {
+            background-color: #030303;
+            color: #ffffff;
+            border-color: #030303;
+        }
+
+        .tag:hover:not(.active) {
+            background-color: #e5e5e5;
+        }
+
+        /* Video Grid Layout */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px 16px;
+        }
+
+        .video-card {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .thumbnail-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .time-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 2px 4px;
+            border-radius: 2px;
+            z-index: 2;
+        }
+
+        .video-details {
+            display: flex;
+            gap: 12px;
+        }
+
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ddd;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .video-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #030303;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .channel-name, .video-stats {
+            font-size: 12px;
+            color: #606060;
+            line-height: 1.4;
+        }
+
+        .ad-badge {
+            background-color: #fbc02d;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 1px 3px;
+            border-radius: 2px;
+            margin-right: 4px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            aside {
+                width: 72px;
+            }
+            .sidebar-item span, .sidebar-heading {
+                display: none;
+            }
+            .sidebar-item {
+                justify-content: center;
+                padding: 16px 0;
+            }
+            main {
+                margin-left: 72px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HEADER COMPONENT -->
+    <header>
+        <div class="header-left">
+            <i class="fa-solid fa-bars menu-btn"></i>
+            <a href="#" class="logo">
+                <i class="fa-brands fa-youtube"></i> YouTube <sup>HD</sup>
+            </a>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <input type="text" placeholder="Search">
+                <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <button class="mic-btn"><i class="fa-solid fa-microphone"></i></button>
+        </div>
+
+        <div class="header-right">
+            <i class="fa-solid fa-video"></i>
+            <i class="fa-solid fa-border-all"></i>
+            <i class="fa-solid fa-bell"></i>
+            <div class="user-avatar">C</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- 2. SIDEBAR COMPONENT -->
+        <aside>
+            <div class="sidebar-group">
+                <a href="#" class="sidebar-item active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-regular fa-compass"></i>
+                    <span>Explore</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-photo-film"></i>
+                    <span>Subscriptions</span>
+                </a>
+            </div>
+
+            <div class="sidebar-group">
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>Library</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>History</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-circle-play"></i>
+                    <span>Your videos</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>Watch later</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-regular fa-thumbs-up"></i>
+                    <span>Liked videos</span>
+                </a>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-heading">Subscriptions</div>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-music"></i>
+                    <span>Music</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Sports</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <span>Gaming</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fa-regular fa-newspaper"></i>
+                    <span>News</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 3. BODY CONTENT COMPONENT -->
+        <main>
+            <!-- Tags Bar -->
+            <div class="tags-bar">
+                <button class="tag active">All</button>
+                <button class="tag">Music</button>
+                <button class="tag">Mixes</button>
+                <button class="tag">User interface design</button>
+                <button class="tag">Nollywood</button>
+                <button class="tag">Logos</button>
+                <button class="tag">Graphic design</button>
+                <button class="tag">Website</button>
+                <button class="tag">Computer Science</button>
+                <button class="tag">Contemporary</button>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="video-grid">
+                
+                <!-- Video 1 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1005/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">5:21</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">A</div>
+                        <div class="video-info">
+                            <div class="video-title">4-Year Medical Doctor (MD) Degree in UK</div>
+                            <div class="channel-name">DesignSense</div>
+                            <div class="video-stats"><span class="ad-badge">Ad</span> AUC School of Medicine</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1060/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">5:21</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">D</div>
+                        <div class="video-info">
+                            <div class="video-title">UI Design Trends 2021</div>
+                            <div class="channel-name">DesignSense</div>
+                            <div class="video-stats">521K views &bull; 5 months ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 3 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1025/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">3:28</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">X</div>
+                        <div class="video-info">
+                            <div class="video-title">Simi - Complete Me | Official Video</div>
+                            <div class="channel-name">X3M Music</div>
+                            <div class="video-stats">3.7M views &bull; 3 years ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 4 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1012/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">7:50</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">W</div>
+                        <div class="video-info">
+                            <div class="video-title">Data Analyst Career Switch | How I Became a Data...</div>
+                            <div class="channel-name">The Work Life Man</div>
+                            <div class="video-stats">56K views &bull; 1 month ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 5 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1074/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">4:38:36</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">S</div>
+                        <div class="video-info">
+                            <div class="video-title">STUBBORN BILLIONAIRES Complete (UGEZU New HI...</div>
+                            <div class="channel-name">Nollywood Pictures</div>
+                            <div class="video-stats">1.2M views &bull; 2 weeks ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 6 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1062/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">13:04</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">L</div>
+                        <div class="video-info">
+                            <div class="video-title">Linda Osifo and Olakira on the NdaniTGIFShow</div>
+                            <div class="channel-name">NdaniTV</div>
+                            <div class="video-stats">230K views &bull; 8 months ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 7 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1069/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">1:56:50</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">S</div>
+                        <div class="video-info">
+                            <div class="video-title">Designing a Complete Brand Identity with Sydne...</div>
+                            <div class="channel-name">Adobe Creative Cloud</div>
+                            <div class="video-stats">89K views &bull; 1 year ago</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video 8 -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <video controls poster="https://picsum.photos/id/1027/400/225">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        </video>
+                        <span class="time-badge">17:36</span>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">M</div>
+                        <div class="video-info">
+                            <div class="video-title">7 Mistakes Ladies Make When They Like a Guy |...</div>
+                            <div class="channel-name">Relationship Hub</div>
+                            <div class="video-stats">410K views &bull; 4 months ago</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
